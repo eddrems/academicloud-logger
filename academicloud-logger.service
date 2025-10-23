@@ -1,0 +1,19 @@
+[Unit]
+Description=AcademiCloud MongoDB Logger Microservice
+After=network.target
+
+[Service]
+Type=simple
+User=www-data
+WorkingDirectory=/var/www/academicloud_logger
+ExecStart=/usr/bin/node /var/www/academicloud_logger/server.js
+Restart=always
+RestartSec=10
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=academicloud-logger
+Environment=NODE_ENV=production
+
+[Install]
+WantedBy=multi-user.target
+
