@@ -119,7 +119,7 @@ app.post('/log', (req, res) => {
                 const logsToInsert = [...logBuffer];
                 logBuffer = [];
                 try {
-                    await db.collection('logs').insertMany(logsToInsert, { ordered: false });
+                    await db.collection('auditoria').insertMany(logsToInsert, { ordered: false });
                 } catch (error) {
                     console.error('Error al escribir batch completo:', error.message);
                 }
@@ -241,7 +241,7 @@ process.on('SIGINT', async () => {
     if (logBuffer.length > 0) {
         console.log(`📝 Escribiendo ${logBuffer.length} logs pendientes...`);
         try {
-            await db.collection('logs').insertMany(logBuffer, { ordered: false });
+            await db.collection('auditoria').insertMany(logBuffer, { ordered: false });
             console.log('✅ Logs pendientes guardados');
         } catch (error) {
             console.error('❌ Error al guardar logs pendientes:', error.message);
