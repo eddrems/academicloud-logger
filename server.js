@@ -1,7 +1,9 @@
+const path = require('path');
 const express = require('express');
 const { MongoClient } = require('mongodb');
 const cors = require('cors');
-require('dotenv').config();
+// .env junto a este archivo: dotenv por defecto usa process.cwd(), que PM2 puede no apuntar al release.
+require('dotenv').config({ path: path.join(__dirname, '.env') });
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -19,6 +21,14 @@ const BATCH_INTERVAL = parseInt(process.env.BATCH_INTERVAL) || 500; // ms
 // Conectar a MongoDB
 const mongoUri = process.env.MONGODB_URI;
 const dbName = process.env.MONGODB_DATABASE || 'academicloud_logs';
+
+if (!mongoUri || typeof mongoUri !== 'string' || !mongoUri.trim()) {
+    console.error(
+        '❌ MONGODB_URI no está definida o está vacía. ' +
+        'Añádela en .env en el servidor o en las variables de entorno de la app (p. ej. Cleavr → Environment).'
+    );
+    process.exit(1);
+}
 
 MongoClient.connect(mongoUri, {
     useNewUrlParser: true,
